@@ -1,0 +1,9 @@
+---
+# Common tasks
+
+- name: Install users
+  user: 
+    name: jsbillin
+
+- name: install ansible
+  package: name=ansible state=present

@@ -1,0 +1,49 @@
+---
+# This playbook manages sssd
+
+- name: Install sssd
+  yum: name={{ item }} state=present
+  tags: sssd
+  with_items:
+   - sssd
+   - sssd-common
+   - sssd-tools
+
+- name: Configure sssd
+  template: src=sssd.conf.j2 dest=/etc/sssd/sssd.conf owner=root group=root mode=0700
+  notify: restart sssd
+  tags: sssd
+
+- name: Configure TLS
+  copy: src={{ item }} dest=/etc/pki/ca-trust/source/anchors/{{ item }}
+  with_items: 
+    - InCommon-RSA-Server-CA.pem
+    - ITS-PKI01_UMROOT-RootCA.pem
+    - umroot.pem
+  notify: 
+    - update-ca-trust
+    - restart sssd
+
+- name: Start the sssd service
+  service: name=sssd state=started enabled=yes
+  tags: sssd
+
+- name: install oddjob-mkhomedir
+  yum: name=oddjob-mkhomedir state=present
+  tags: oddjob
+
+- name: Start the oddjobd service
+  service: name=oddjobd state=started enabled=yes
+  tags: oddjob
+
+- name: Install pam config
+  copy: src={{ item }} dest=/etc/pam.d/{{ item }}
+  with_items:
+    - system-auth-um
+    - password-auth-um
+
+- name: Install symlinks
+  file: src=/etc/pam.d/{{ item }}-um dest=/etc/pam.d/{{ item }} state=link
+  with_items:
+    - system-auth
+    - password-auth

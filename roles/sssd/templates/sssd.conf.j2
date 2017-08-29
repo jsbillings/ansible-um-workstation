@@ -1,0 +1,57 @@
+[domain/umich.edu]
+autofs_provider = none
+cache_credentials = False
+krb5_kpasswd = kerberos-admin.umich.edu:749
+krb5_server = kerberos-1.umich.edu:88,kerberos-2.umich.edu:88,kerberos-3.umich.edu:88
+id_provider = ldap
+auth_provider = krb5
+chpass_provider = krb5
+access_provider = ldap
+krb5_store_password_if_offline = False
+krb5_realm = UMICH.EDU
+krb5_renewable_lifetime = 5d
+krb5_renew_interval = 4h
+ldap_uri = ldap://adsroot.itcs.umich.edu
+ldap_referrals = False
+ldap_search_base = OU=UMICH,DC=adsroot,DC=itcs,DC=umich,DC=edu
+ldap_group_search_base = {{ ldap_group_search_base }}
+ldap_access_filter = {{ ldap_access_filter }}
+ldap_user_object_class = user
+ldap_user_name = sAMAccountName
+ldap_user_gid_number = uidNumber
+ldap_id_use_start_tls = True
+ldap_group_object_class = group
+ldap_group_name = cn
+ldap_group_gid_number = gidNumber
+ldap_default_bind_dn = {{ ldap_default_bind_dn }}
+ldap_default_authtok_type = obfuscated_password
+ldap_default_authtok = {{ vault_ldap_default_authtok }}
+ldap_tls_reqcert = demand
+ldap_schema = AD
+ldap_user_gecos = description
+ldap_tls_cacert = /etc/pki/tls/certs/ca-bundle.crt
+override_homedir = {{ override_homedir }}
+override_shell = /bin/bash
+override_gid = 22
+ignore_group_members = true
+min_id = 1001
+
+[sssd]
+services = nss, pam
+config_file_version = 2
+domains = umich.edu
+
+[nss]
+homedir_substring = /home
+
+[pam]
+
+[sudo]
+
+[autofs]
+
+[ssh]
+
+[pac]
+
+[ifp]

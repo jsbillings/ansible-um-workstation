@@ -1,0 +1,48 @@
+---
+# This playbook contains OpenAFS packages
+
+- name: Configure EPEL
+  yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm state=present
+  when: ansible_distribution == "RedHat"
+
+- name: Configure redhat openafs repo
+  copy: src=jsbillings-openafs-epel-7.repo dest=/etc/yum.repos.d/jsbillings-openafs-epel-7.repo
+  tags: openafs
+  when: ansible_distribution == "RedHat"
+
+- name: Configure fedora openafs repo
+  copy: src=jsbillings-openafs-fedora.repo dest=/etc/yum.repos.d/jsbillings-openafs-fedora.repo
+  tags: openafs
+  when: ansible_distribution == "Fedora"
+
+- name: Install redhat openafs module
+  yum: name=kmod-openafs state=present
+  tags: openafs
+  when: ansible_distribution == "RedHat"
+
+- name: Install fedora openafs module
+  yum: name={{ item }} state=present
+  tags: openafs
+  when: ansible_distribution == "Fedora"
+  with_items:
+    - dkms
+    - dkms-openafs
+    - gcc
+    - kernel-devel
+
+- name: Install openafs
+  yum: name={{ item }} state=present
+  with_items:
+   - openafs
+   - openafs-client
+   - openafs-krb5
+   - pam_afs_session
+  tags: openafs
+
+- name: Configure openafs
+  copy: src=ThisCell dest=/etc/openafs/ThisCell
+  tags: openafs
+
+- name: Start the openafs service
+  service: name=openafs-client state=started enabled=yes
+  tags: openafs

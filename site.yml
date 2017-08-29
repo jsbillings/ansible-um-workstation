@@ -1,0 +1,20 @@
+---
+# This playbook deploys a krb5/openafs system
+
+- name: apply common configuration to all nodes
+  hosts: all
+  remote_user: root
+
+  roles:
+    - common
+
+- name: configure and deploy openafs and krb5 on hosts
+  hosts: 
+    - fedora26
+    - rhel7
+  remote_user: root
+
+  roles:
+    - openafs
+    - krb5
+    - sssd

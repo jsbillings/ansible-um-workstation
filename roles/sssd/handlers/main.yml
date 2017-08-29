@@ -1,0 +1,8 @@
+---
+# Handler to handle sssd notifications
+
+- name: update-ca-trust
+  command: /usr/bin/update-ca-trust
+
+- name: restart sssd
+  service: name=sssd state=restarted

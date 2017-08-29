@@ -1,0 +1,12 @@
+# sssd config
+## Who can log into this system
+ldap_access_filter: (cn=jsbillin)
+
+## base AD group for accounts
+ldap_group_search_base: OU=Groups,OU=CAEN,OU=ENGIN,OU=Organizations,OU=UMICH,DC=adsroot,DC=itcs,DC=umich,DC=edu
+
+## What account to bind to AD with
+ldap_default_bind_dn: CN=caenldapuser,OU=Users,OU=CAEN,OU=ENGIN,OU=Organizations,OU=UMICH,DC=adsroot,DC=itcs,DC=umich,DC=edu
+
+## Default Homedir
+override_homedir: /home/%u

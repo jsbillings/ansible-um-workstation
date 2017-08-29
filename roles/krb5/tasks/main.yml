@@ -1,0 +1,13 @@
+---
+# This playbook contains Kerberos packages
+
+- name: Install krb5
+  yum: name={{ item }} state=present
+  with_items:
+   - krb5-workstation
+   - libkadm5
+  tags: krb5
+
+- name: Install the krb5.conf
+  copy: src=krb5.conf dest=/etc/krb5.conf
+  tags: krb5
